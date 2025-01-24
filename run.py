@@ -4,7 +4,7 @@ from jobs import SharePointJobManager
 if __name__ == "__main__":
     try:
         manager = SharePointJobManager()
-        result = manager.create_copy_job(manager.config.ORIGIN_URL, manager.config.DESTINATION_URL, is_move_mode=False)
+        result = manager.create_copy_job(manager.config.ORIGIN_URL, manager.config.DESTINATION_URL)
         job_info = result.get('d', {}).get('CreateCopyJobs', {}).get('results', [{}])[0]
         job_id = job_info.get('JobId')
         job_queue_uri = job_info.get('JobQueueUri')

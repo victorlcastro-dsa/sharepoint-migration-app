@@ -13,12 +13,12 @@ class SharePointJobManager:
     def __init__(self):
         self.config = Config()
 
-    def create_copy_job(self, origin_url, destination_url, is_move_mode=False):
+    def create_copy_job(self, origin_url, destination_url):
         """Create a copy job in SharePoint."""
         logging.info("Starting job creation process")
         access_token = get_access_token()
         headers = get_headers(access_token)
-        payload = get_payload(origin_url, destination_url, is_move_mode)
+        payload = get_payload(origin_url, destination_url)
 
         response = requests.post(
             f"https://{self.config.TENANT_NAME}.sharepoint.com/_api/site/CreateCopyJobs",
