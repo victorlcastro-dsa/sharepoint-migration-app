@@ -83,8 +83,13 @@ def monitor_job(job_id, job_queue_uri, encryption_key):
         logging.error(f"Failed to monitor job: {response.status_code} - {response.text}")
         raise JobMonitoringError(f"Failed to monitor job: {response.status_code} - {response.text}")
 
-def monitor_job_until_complete(job_id, job_queue_uri, encryption_key, interval=60, initial_delay=10, max_initial_wait=120):
+def monitor_job_until_complete(job_id, job_queue_uri, encryption_key, interval=None, initial_delay=None, max_initial_wait=None):
     """Monitor the job until it is complete or the maximum initial wait time is reached."""
+    config = Config()
+    interval = interval or config.INTERVAL
+    initial_delay = initial_delay or config.INITIAL_DELAY
+    max_initial_wait = max_initial_wait or config.MAX_INITIAL_WAIT
+
     logging.info(f"Initial delay of {initial_delay} seconds before starting job monitoring")
     time.sleep(initial_delay)
     start_time = time.time()
