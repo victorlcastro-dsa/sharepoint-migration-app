@@ -5,11 +5,9 @@ from jobs import create_copy_job, monitor_job_progress, reprocess_failed_files
 
 def move_large_folder_in_batches():
     # Get access token
-    access_token = get_access_token(Config.TENANT_ID, Config.CLIENT_ID, Config.CLIENT_SECRET)
-    print(f"Access Token: {access_token}")
+    access_token = get_access_token(Config.TENANT_ID, Config.CLIENT_ID, Config.CERTIFICATE_PATH, Config.CERTIFICATE_PASSWORD)
 
-    # List the files in the source folder
-    files = list_files_in_folder(Config.SOURCE_URL, access_token)
+    files = list_files_in_folder(Config.SOURCE_URL, Config.FOLDER_PATH, access_token)
     print(f"Total de arquivos encontrados: {len(files)}")
     print("Arquivos encontrados:")
     for file in files:

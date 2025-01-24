@@ -1,3 +1,5 @@
 .env
 sharepoint-env
 __pycache__
+.crt
+certificado_completo.pem
