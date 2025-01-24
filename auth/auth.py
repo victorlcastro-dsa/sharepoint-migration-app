@@ -1,5 +1,6 @@
 import msal
 import logging
+import os
 from config import Config
 from exceptions import TokenAcquisitionError
 
@@ -7,8 +8,17 @@ def get_access_token():
     """Acquire an access token using MSAL."""
     logging.info("Starting token acquisition process")
     config = Config()
-    with open(config.CERTIFICATE_PATH, 'r') as cert_file:
-        private_key = cert_file.read()
+    logging.info(f"Certificate path: {config.CERTIFICATE_PATH}")
+    if not os.path.exists(config.CERTIFICATE_PATH):
+        logging.error("Certificate file not found")
+        raise TokenAcquisitionError("Certificate file not found")
+
+    try:
+        with open(config.CERTIFICATE_PATH, 'r') as cert_file:
+            private_key = cert_file.read()
+    except FileNotFoundError:
+        logging.error("Certificate file not found")
+        raise TokenAcquisitionError("Certificate file not found")
 
     app = msal.ConfidentialClientApplication(
         config.CLIENT_ID,
