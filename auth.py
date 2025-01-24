@@ -2,7 +2,7 @@ import msal
 from config import Config
 
 # Function to get the access token
-def get_access_token(tenant_id, client_id, certificate_path, certificate_password):
+def get_access_token(tenant_id, client_id, certificate_path):
     with open(certificate_path, 'r') as cert_file:
         private_key = cert_file.read()
 

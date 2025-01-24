@@ -1,62 +1,41 @@
 import requests
-import time
+from auth import get_access_token
 from config import Config
 
-# Function to create copy/move jobs
-def create_copy_job(source_url, destination_site, file_paths, access_token):
-    url = f"{source_url}/_api/site/CreateCopyJobs"
+def create_copy_job(origin_url, destination_url, is_move_mode=False):
+    access_token = get_access_token(Config.TENANT_ID, Config.CLIENT_ID, Config.CERTIFICATE_PATH)
     headers = {
-        "Authorization": f"Bearer {access_token}",
-        "Accept": "application/json",
-        "Content-Type": "application/json"
+        'Authorization': f'Bearer {access_token}',
+        'Accept': 'application/json;odata=verbose',
+        'Content-Type': 'application/json'
     }
-    data = {
-        "exportObjectUris": [f"{source_url}{file_path}" for file_path in file_paths],
-        "destinationUri": destination_site,
+
+    payload = {
+        "exportObjectUris": [origin_url],
+        "destinationUri": destination_url,
         "options": {
-            "IgnoreVersionHistory": True,
-            "IsMoveMode": True
+            "IsMoveMode": is_move_mode,
+            "IgnoreVersionHistory": False,
+            "AllowSchemaMismatch": True,
+            "AllowSmallerVersionLimitOnDestination": True,
+            "IncludeItemPermissions": False,
+            "BypassSharedLock": True,
+            "MoveButKeepSource": False,
+            "ExcludeChildren": False
         }
     }
-    response = requests.post(url, headers=headers, json=data)
-    response.raise_for_status()
-    return response.json()
 
-# Function to monitor the progress of jobs
-def monitor_job_progress(job_id, source_url, access_token):
-    url = f"{source_url}/_api/site/GetCopyJobProgress"
-    headers = {
-        "Authorization": f"Bearer {access_token}",
-        "Accept": "application/json",
-        "Content-Type": "application/json"
-    }
-    data = {"JobId": job_id}
-    while True:
-        response = requests.post(url, headers=headers, json=data)
-        response.raise_for_status()
-        progress = response.json()
-        print(f"Status do Job: {progress['JobState']}")
-        if progress["JobState"] == "Completed":
-            print("Job concluído com sucesso!")
-            return []  # Sem falhas
-        elif progress["JobState"] == "Failed":
-            print("Job falhou! Coletando arquivos problemáticos...")
-            return progress.get("Errors", [])  # Retorna os arquivos que falharam
-        time.sleep(10)  # Wait 10 seconds before checking again
+    response = requests.post(
+        f"https://{Config.TENANT_NAME}.sharepoint.com/_api/site/CreateCopyJobs",
+        headers=headers,
+        json=payload
+    )
 
-# Function to reprocess failed files
-def reprocess_failed_files(failed_files, source_url, destination_site, access_token):
-    retries = 0
-    while failed_files and retries < Config.MAX_RETRIES:
-        retries += 1
-        print(f"Tentativa {retries}/{Config.MAX_RETRIES} para reprocessar {len(failed_files)} arquivos...")
-        try:
-            job_response = create_copy_job(source_url, destination_site, failed_files, access_token)
-            job_id = job_response["JobId"]
-            failed_files = monitor_job_progress(job_id, source_url, access_token)  # Atualiza os arquivos que falharam
-        except Exception as e:
-            print(f"Erro durante o reprocessamento: {e}")
-    if failed_files:
-        print(f"Não foi possível mover os seguintes arquivos após {Config.MAX_RETRIES} tentativas: {failed_files}")
+    if response.status_code == 200:
+        return response.json()
     else:
-        print("Todos os arquivos foram movidos com sucesso após reprocessamento.")
+        raise Exception(f"Failed to create copy job: {response.status_code} - {response.text}")
+
+if __name__ == "__main__":
+    result = create_copy_job(Config.ORIGIN_URL, Config.DESTINATION_URL, is_move_mode=True)
+    print(result)
