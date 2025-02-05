@@ -1,5 +1,6 @@
 from config import Config
 
+
 def get_headers(access_token):
     """Get headers for the request."""
     return {
@@ -7,6 +8,7 @@ def get_headers(access_token):
         'Accept': 'application/json;odata=verbose',
         'Content-Type': 'application/json'
     }
+
 
 def get_payload(origin_url, destination_url):
     """Get payload for the request."""

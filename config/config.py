@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 class Config:
     _instance = None
 
@@ -27,11 +28,19 @@ class Config:
         self.INITIAL_DELAY = int(os.getenv('INITIAL_DELAY', 10))
         self.INTERVAL = int(os.getenv('INTERVAL', 60))
         self.MAX_INITIAL_WAIT = int(os.getenv('MAX_INITIAL_WAIT', 120))
-        self.IGNORE_VERSION_HISTORY = os.getenv('IGNORE_VERSION_HISTORY', 'False').lower() == 'true'
-        self.ALLOW_SCHEMA_MISMATCH = os.getenv('ALLOW_SCHEMA_MISMATCH', 'True').lower() == 'true'
-        self.ALLOW_SMALLER_VERSION_LIMIT_ON_DESTINATION = os.getenv('ALLOW_SMALLER_VERSION_LIMIT_ON_DESTINATION', 'True').lower() == 'true'
-        self.INCLUDE_ITEM_PERMISSIONS = os.getenv('INCLUDE_ITEM_PERMISSIONS', 'False').lower() == 'true'
-        self.BYPASS_SHARED_LOCK = os.getenv('BYPASS_SHARED_LOCK', 'True').lower() == 'true'
-        self.MOVE_BUT_KEEP_SOURCE = os.getenv('MOVE_BUT_KEEP_SOURCE', 'False').lower() == 'true'
-        self.EXCLUDE_CHILDREN = os.getenv('EXCLUDE_CHILDREN', 'False').lower() == 'true'
-        self.IS_MOVE_MODE = os.getenv('IS_MOVE_MODE', 'False').lower() == 'true'
+        self.IGNORE_VERSION_HISTORY = os.getenv(
+            'IGNORE_VERSION_HISTORY', 'False').lower() == 'true'
+        self.ALLOW_SCHEMA_MISMATCH = os.getenv(
+            'ALLOW_SCHEMA_MISMATCH', 'True').lower() == 'true'
+        self.ALLOW_SMALLER_VERSION_LIMIT_ON_DESTINATION = os.getenv(
+            'ALLOW_SMALLER_VERSION_LIMIT_ON_DESTINATION', 'True').lower() == 'true'
+        self.INCLUDE_ITEM_PERMISSIONS = os.getenv(
+            'INCLUDE_ITEM_PERMISSIONS', 'False').lower() == 'true'
+        self.BYPASS_SHARED_LOCK = os.getenv(
+            'BYPASS_SHARED_LOCK', 'True').lower() == 'true'
+        self.MOVE_BUT_KEEP_SOURCE = os.getenv(
+            'MOVE_BUT_KEEP_SOURCE', 'False').lower() == 'true'
+        self.EXCLUDE_CHILDREN = os.getenv(
+            'EXCLUDE_CHILDREN', 'False').lower() == 'true'
+        self.IS_MOVE_MODE = os.getenv(
+            'IS_MOVE_MODE', 'False').lower() == 'true'

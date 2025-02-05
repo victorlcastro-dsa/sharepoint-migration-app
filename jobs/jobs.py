@@ -9,6 +9,7 @@ from utils import get_headers, get_payload
 
 setup_logging()
 
+
 class SharePointJobManager:
     def __init__(self):
         self.config = Config()
@@ -32,8 +33,10 @@ class SharePointJobManager:
             logging.info(f"Job response: {job_response}")
             return job_response
         else:
-            logging.error(f"Failed to create copy job: {response.status_code} - {response.text}")
-            raise JobCreationError(f"Failed to create copy job: {response.status_code} - {response.text}")
+            logging.error(f"Failed to create copy job: {
+                          response.status_code} - {response.text}")
+            raise JobCreationError(f"Failed to create copy job: {
+                                   response.status_code} - {response.text}")
 
     def monitor_job(self, job_id, job_queue_uri, encryption_key):
         """Monitor the status of a copy job."""
@@ -57,8 +60,10 @@ class SharePointJobManager:
             logging.info(f"Job status: {job_status}")
             return job_status
         else:
-            logging.error(f"Failed to monitor job: {response.status_code} - {response.text}")
-            raise JobMonitoringError(f"Failed to monitor job: {response.status_code} - {response.text}")
+            logging.error(f"Failed to monitor job: {
+                          response.status_code} - {response.text}")
+            raise JobMonitoringError(f"Failed to monitor job: {
+                                     response.status_code} - {response.text}")
 
     def monitor_job_until_complete(self, job_id, job_queue_uri, encryption_key, interval=None, initial_delay=None, max_initial_wait=None):
         """Monitor the job until it is complete or the maximum initial wait time is reached."""
@@ -66,14 +71,16 @@ class SharePointJobManager:
         initial_delay = initial_delay or self.config.INITIAL_DELAY
         max_initial_wait = max_initial_wait or self.config.MAX_INITIAL_WAIT
 
-        logging.info(f"Initial delay of {initial_delay} seconds before starting job monitoring")
+        logging.info(f"Initial delay of {
+                     initial_delay} seconds before starting job monitoring")
         time.sleep(initial_delay)
         start_time = time.time()
         job_found = False
 
         while time.time() - start_time < max_initial_wait:
             try:
-                job_status = self.monitor_job(job_id, job_queue_uri, encryption_key)
+                job_status = self.monitor_job(
+                    job_id, job_queue_uri, encryption_key)
                 job_found = True
                 break
             except JobMonitoringError:
@@ -81,11 +88,14 @@ class SharePointJobManager:
                 time.sleep(interval)
 
         if not job_found:
-            logging.error(f"Job ID {job_id} not found after {max_initial_wait} seconds")
-            raise JobMonitoringError(f"Job ID {job_id} not found after {max_initial_wait} seconds")
+            logging.error(f"Job ID {job_id} not found after {
+                          max_initial_wait} seconds")
+            raise JobMonitoringError(f"Job ID {job_id} not found after {
+                                     max_initial_wait} seconds")
 
         while True:
-            job_status = self.monitor_job(job_id, job_queue_uri, encryption_key)
+            job_status = self.monitor_job(
+                job_id, job_queue_uri, encryption_key)
             status = job_status.get('d', {}).get('JobState')
             if status == 'Completed':
                 logging.info(f"Job {job_id} completed successfully")
@@ -94,5 +104,6 @@ class SharePointJobManager:
                 logging.error(f"Job {job_id} failed")
                 break
             else:
-                logging.info(f"Job {job_id} is still in progress. Status: {status}")
+                logging.info(
+                    f"Job {job_id} is still in progress. Status: {status}")
                 time.sleep(interval)

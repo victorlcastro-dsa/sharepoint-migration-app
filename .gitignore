@@ -3,3 +3,4 @@ sharepoint-env
 __pycache__
 certificado_completo.pem
 app.log
+.venv

@@ -4,6 +4,7 @@ import os
 from config import Config
 from exceptions import TokenAcquisitionError
 
+
 def get_access_token():
     """Acquire an access token using MSAL."""
     logging.info("Starting token acquisition process")

@@ -108,5 +108,7 @@ python run.py
 The application will create a copy job in SharePoint.
 
 ```sh
-#FIXME: Please note that the progress monitor currently cannot accurately determine if a job has completed.
+# FIXME: Please note that the progress monitor currently cannot accurately determine if a job has completed.
+# TODO: Implement Asyncronous Job Creation and Monitoring
+# TODO: Implement multi-threading for job creation and monitoring
 ```
