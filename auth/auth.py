@@ -3,9 +3,10 @@ import logging
 import os
 from config import Config
 from exceptions import TokenAcquisitionError
+import asyncio
 
 
-def get_access_token():
+async def get_access_token():
     """Acquire an access token using MSAL."""
     logging.info("Starting token acquisition process")
     config = Config()
@@ -29,7 +30,8 @@ def get_access_token():
             "private_key": private_key,
         },
     )
-    result = app.acquire_token_for_client(scopes=[config.API_SCOPE])
+    loop = asyncio.get_event_loop()
+    result = await loop.run_in_executor(None, app.acquire_token_for_client, [config.API_SCOPE])
     if "access_token" in result:
         logging.info("Token acquisition successful")
         return result["access_token"]
