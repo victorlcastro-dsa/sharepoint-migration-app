@@ -4,9 +4,9 @@ from config import Config
 def get_headers(access_token):
     """Get headers for the request."""
     return {
-        'Authorization': f'Bearer {access_token}',
-        'Accept': 'application/json;odata=verbose',
-        'Content-Type': 'application/json'
+        "Authorization": f"Bearer {access_token}",
+        "Accept": "application/json;odata=verbose",
+        "Content-Type": "application/json",
     }
 
 
@@ -24,6 +24,6 @@ def get_payload(origin_url, destination_url):
             "IncludeItemPermissions": config.INCLUDE_ITEM_PERMISSIONS,
             "BypassSharedLock": config.BYPASS_SHARED_LOCK,
             "MoveButKeepSource": config.MOVE_BUT_KEEP_SOURCE,
-            "ExcludeChildren": config.EXCLUDE_CHILDREN
-        }
+            "ExcludeChildren": config.EXCLUDE_CHILDREN,
+        },
     }

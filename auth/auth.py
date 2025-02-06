@@ -16,7 +16,7 @@ async def get_access_token():
         raise TokenAcquisitionError("Certificate file not found")
 
     try:
-        with open(config.CERTIFICATE_PATH, 'r') as cert_file:
+        with open(config.CERTIFICATE_PATH, "r") as cert_file:
             private_key = cert_file.read()
     except FileNotFoundError:
         logging.error("Certificate file not found")
@@ -31,7 +31,9 @@ async def get_access_token():
         },
     )
     loop = asyncio.get_event_loop()
-    result = await loop.run_in_executor(None, app.acquire_token_for_client, [config.API_SCOPE])
+    result = await loop.run_in_executor(
+        None, app.acquire_token_for_client, [config.API_SCOPE]
+    )
     if "access_token" in result:
         logging.info("Token acquisition successful")
         return result["access_token"]

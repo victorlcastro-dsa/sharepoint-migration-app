@@ -8,5 +8,5 @@ def setup_logging():
     logging.basicConfig(
         filename=config.LOG_FILE,
         level=config.LOG_LEVEL,
-        format='%(asctime)s - %(levelname)s - %(message)s'
+        format="%(asctime)s - %(levelname)s - %(message)s",
     )
